@@ -1,4 +1,4 @@
-name: 🚀 Deploy Telegram AI Bot
+name: 🚀 Deploy Telegram YandexGPT Bot
 on:
   push:
     branches: [ main ]
@@ -18,20 +18,20 @@ jobs:
       with:
         node-version: 20
         cache: 'pnpm'
+        cache-dependency-path: '**/pnpm-lock.yaml'
 
     - name: Install pnpm
-      run: |
-        npm install -g pnpm@latest
+      run: npm install -g pnpm@latest
 
     - name: Install dependencies
       run: |
         pnpm install --frozen-lockfile
-        pnpm build
 
     - name: Run Bot
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+        YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
       run: |
+        echo "🚀 Starting Telegram YandexGPT Bot..."
         pnpm start
