@@ -1,9 +1,18 @@
 import OpenAI from "openai";
 import { getSystemPromptFromDb } from "./db.js";
 
-const openai = new OpenAI({
-  apiKey: process.env["AI_INTEGRATIONS_OPENAI_API_KEY"]!,
-  baseURL: process.env["AI_INTEGRATIONS_OPENAI_BASE_URL"]!,
+const llmResponse = await fetch('https://llm.api.cloud.yandex.net/foundationModels/v1/completion', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Api-Key ${process.env.YANDEX_API_KEY}`,
+    'x-folder-id': process.env.YANDEX_FOLDER_ID!,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    modelUri: `gpt://${process.env.YANDEX_FOLDER_ID}/yandexgpt-lite`,
+    messages: [{role: 'user', text: message.text}],
+    completionOptions: {temperature: 0.6, maxTokens: 1000}
+  })
 });
 
 export interface ChatMessage {
