@@ -1,4 +1,4 @@
-name: 🚀 Deploy Telegram YandexGPT Bot
+name: Deploy Telegram YandexGPT Bot
 on:
   push:
     branches: [ main ]
