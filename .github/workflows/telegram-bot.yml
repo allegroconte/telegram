@@ -6,15 +6,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-   with: node-version: 20
-    - run: npm install -g pnpm
-    - run: pnpm install
-    - name: Run Bot
-      env:
-        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
-        YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-      run: pnpm start
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run Bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+          YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
+        run: pnpm start
