@@ -1,48 +1,28 @@
-name: 🤖 Telegram YandexGPT Bot
+name: 🤖 Telegram Bot 24/7
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
+  schedule:
+    - cron: '*/30 * * * *'  # Каждые 30 мин
+concurrency:
+  group: bot-deploy
+  cancel-in-progress: true
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
+    runs-on: ubuntu-22.04  # ✅ Быстрее!
+    timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-      
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-      
-      - name: 🚀 Test Bot LIVE!
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        run: |
-          npx tsx -e "
-            import { Telegraf } from 'telegraf';
-            const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-            bot.command('start', (ctx) => {
-              ctx.reply('✅ GitHub Bot ЖИВ! 🚀');
-              console.log('✅ /start получен!');
-            });
-            bot.on('message', (ctx) => {
-              ctx.reply('🤖 Echo: ' + ctx.message.text);
-              console.log('📨 Сообщение:', ctx.message.text);
-            });
-            console.log('🚀 Bot starting...');
-            bot.launch();
-            console.log('✅ Bot launched! Ждите /start...');
-            process.once('SIGINT', () => bot.stop('SIGINT'));
-            setTimeout(() => {
-              console.log('⏰ 30 сек тест завершён');
-              process.exit(0);
-            }, 30000);
-          "
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with: version: 9
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24  # Новые runners
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - name: 🚀 Bot LIVE!
+      env:
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
+        YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+      run: |
+        npx tsx artifacts/api-server/src/app.ts
