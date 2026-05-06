@@ -33,5 +33,5 @@ jobs:
         YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
         YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
       run: |
-        echo "🚀 Starting Telegram YandexGPT Bot..."
+        echo "Starting Telegram YandexGPT Bot..."
         pnpm start
