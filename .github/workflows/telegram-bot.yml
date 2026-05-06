@@ -34,6 +34,6 @@ jobs:
     - name: 🚀 Deploy Bot
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-        YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+        YANDEX_API: ${{ secrets.YANDEX_API }}
+        YANDEX_FOLDER: ${{ secrets.YANDEX_FOLDER }}
       run: npx tsx artifacts/api-server/src/app.ts
