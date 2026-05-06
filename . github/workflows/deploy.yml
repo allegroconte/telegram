@@ -1,6 +1,9 @@
 name: Deploy Telegram YandexGPT Bot
 on:
   push:
+   workflow_dispatch:     # ← ДОБАВИТЕ ЭТО!
+  push:
+    branches: [ main ]
     branches: [ main ]
   workflow_dispatch:
 
