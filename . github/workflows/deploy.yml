@@ -1,28 +1,39 @@
-name: 🤖 Telegram Bot 24/7
+name: 🤖 Telegram YandexGPT Bot
+
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'  # Каждые 30 мин
+    - cron: '0 */6 * * *'  # Каждые 6 часов
+
 concurrency:
   group: bot-deploy
   cancel-in-progress: true
+
 jobs:
   deploy:
-    runs-on: ubuntu-22.04  # ✅ Быстрее!
+    runs-on: ubuntu-22.04  # Быстрее!
     timeout-minutes: 120
     steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v4
-      with: version: 9
-    - uses: actions/setup-node@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
       with:
-        node-version: 24  # Новые runners
+        version: 9
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
         cache: 'pnpm'
-    - run: pnpm install --frozen-lockfile
-    - name: 🚀 Bot LIVE!
+        
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      
+    - name: 🚀 Deploy Bot
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
         YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
-      run: |
-        npx tsx artifacts/api-server/src/app.ts
+      run: npx tsx artifacts/api-server/src/app.ts
