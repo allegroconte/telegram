@@ -1,12 +1,30 @@
-- name: Run Bot
-  env:
-    TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-    YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
-    YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-  run: |
-    npx tsx -e "
-      import { Telegraf } from 'telegraf';
-      const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-      console.log('🚀 Bot started!');
-      bot.launch().catch(console.error);
-    "
+name: 🤖 Telegram YandexGPT Bot
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      
+      - name: Run Bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+          YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
+        run: npx tsx artifacts/api-server/src/bot/index.ts
