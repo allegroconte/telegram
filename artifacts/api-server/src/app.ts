@@ -5,8 +5,8 @@ const bot = new Telegraf(process.env.TELEGRAM_TOKEN!);
 bot.start((ctx) => {
   ctx.reply(
     `🤖 *Bot LIVE на GitHub Actions!*\n\n` +
-    `🔑 YANDEX_API_KEY: ${process.env.YANDEX_API_KEY ? '✅' : '❌'}\n` +
-    `📁 YANDEX_FOLDER_ID: ${process.env.YANDEX_FOLDER_ID ? '✅' : '❌'}\n\n` +
+    `🔑 YANDEX_API_KEY: ${process.env.YANDEX_API ? '✅' : '❌'}\n` +
+    `📁 YANDEX_FOLDER_ID: ${process.env.YANDEX_FOLDER ? '✅' : '❌'}\n\n` +
     `Отправьте текст для YandexGPT!`,
     { parse_mode: 'Markdown' }
   );
