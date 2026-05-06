@@ -1,34 +1,14 @@
-import express, { type Express } from "express";
-import cors from "cors";
-import pinoHttp from "pino-http";
-import router from "./routes";
-import { logger } from "./lib/logger";
+import { Telegraf } from 'telegraf';
 
-const app: Express = express();
+const bot = new Telegraf(process.env.TELEGRAM_TOKEN!);
 
-app.use(
-  pinoHttp({
-    logger,
-    serializers: {
-      req(req) {
-        return {
-          id: req.id,
-          method: req.method,
-          url: req.url?.split("?")[0],
-        };
-      },
-      res(res) {
-        return {
-          statusCode: res.statusCode,
-        };
-      },
-    },
-  }),
-);
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+bot.start((ctx) => ctx.reply('🤖 YandexGPT Bot готов!'));
 
-app.use("/api", router);
+bot.on('message', async (ctx) => {
+  // YandexGPT логика здесь
+  ctx.reply('Ваш запрос: ' + ctx.message.text);
+});
 
-export default app;
+console.log('🚀 Starting bot...');
+bot.launch();
+console.log('✅ Bot live!');
