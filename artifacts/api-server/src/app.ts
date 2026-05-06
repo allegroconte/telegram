@@ -5,8 +5,8 @@ const bot = new Telegraf(process.env.TELEGRAM_TOKEN!);
 bot.start((ctx) => {
   ctx.reply(
     `🤖 *Bot LIVE на GitHub Actions!*\n\n` +
-    `🔑 YANDEX_API_KEY: ${process.env.YANDEX_API ? '✅' : '❌'}\n` +
-    `📁 YANDEX_FOLDER_ID: ${process.env.YANDEX_FOLDER ? '✅' : '❌'}\n\n` +
+    `🔑 YANDEX_API: ${process.env.YANDEX_API ? '✅' : '❌'}\n` +
+    `📁 YANDEX_FOLDER: ${process.env.YANDEX_FOLDER ? '✅' : '❌'}\n\n` +
     `Отправьте текст для YandexGPT!`,
     { parse_mode: 'Markdown' }
   );
@@ -17,7 +17,7 @@ bot.on('text', async (ctx) => {
   const loading = await ctx.reply('🧠 *YandexGPT думает...*', { parse_mode: 'Markdown' });
   
   // Проверка секретов
-  if (!process.env.YANDEX_API_KEY || !process.env.YANDEX_FOLDER_ID) {
+  if (!process.env.YANDEX_API || !process.env.YANDEX_FOLDER) {
     return ctx.telegram.editMessageText(
       ctx.chat.id,
       loading.message_id,
@@ -26,7 +26,7 @@ bot.on('text', async (ctx) => {
     );
   }
   
-  const modelUri = `gpt://${process.env.YANDEX_FOLDER_ID}/yandexgpt-lite`;
+  const modelUri = `gpt://${process.env.YANDEX_FOLDER}/yandexgpt-lite`;
   
   try {
     console.log('🤖 Запрос:', query);
@@ -35,7 +35,7 @@ bot.on('text', async (ctx) => {
     const response = await fetch('https://llm.api.cloud.yandex.net/foundationModels/v1/completion', {
       method: 'POST',
       headers: {
-        'Authorization': `Api-Key ${process.env.YANDEX_API_KEY}`,
+        'Authorization': `Api-Key ${process.env.YANDEX_API}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -61,7 +61,7 @@ bot.on('text', async (ctx) => {
     
   } catch (error: any) {
     const errorMsg = error.message || 'Unknown error';
-    const debugInfo = `Model: \`${modelUri}\`\nKey preview: \`${process.env.YANDEX_API_KEY?.slice(0, 8)}...\``;
+    const debugInfo = `Model: \`${modelUri}\`\nKey preview: \`${process.env.YANDEX_API?.slice(0, 8)}...\``;
     
     console.error('💥 YandexGPT:', errorMsg);
     await ctx.telegram.editMessageText(
