@@ -22,12 +22,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
       
-      - name: Build TypeScript
-        run: pnpm run build  # ← СОБИРАЕМ TS → dist/
-      
-      - name: Run Bot
+      - name: Run Bot (tsx — без сборки!)
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-        run: pnpm start
+        run: |
+          npx tsx artifacts/api-server/src/index.ts
