@@ -9,14 +9,19 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v4
+        id: pnpm
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Enable Corepack
-        run: corepack enable
+          cache-dependency-path: '**/pnpm-lock.yaml'
+      
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      
       - name: Run Bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
