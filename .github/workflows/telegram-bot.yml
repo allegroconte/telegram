@@ -20,8 +20,11 @@ jobs:
           cache: 'pnpm'
       
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile  # ← РЕШЕНИЕ!
-
+        run: pnpm install --no-frozen-lockfile
+      
+      - name: Build TypeScript
+        run: pnpm run build  # ← СОБИРАЕМ TS → dist/
+      
       - name: Run Bot
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
