@@ -27,4 +27,4 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-        run: npx tsx artifacts/api-server/src/bot/index.ts
+        run: npx tsx artifacts/api-server/src/app.ts
